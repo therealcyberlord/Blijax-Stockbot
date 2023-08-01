@@ -96,8 +96,6 @@ prompt_msgs = [
     HumanMessage(content="Tips: Make sure to answer in the correct format"),
 ]
 
-
-
 messages = [
     SystemMessage(
         content="You are a world class algorithm for extraction information from JSON format."
@@ -138,7 +136,7 @@ msgs = [
 
 prompt = ChatPromptTemplate(messages=msgs)
 
-input = "What's the stock price of msft?"
+input = "What is the latest news on tesla?"
 
 chain = create_openai_fn_chain([retrieveNews, retrieveStocks], llm, prompt, verbose=True)
 decision = chain.run(input)
@@ -148,7 +146,3 @@ if (decision["name"] == "retrieveNews"):
     print(retrieveNews(input))
 elif decision["name"] == "retrieveStocks":
     print(retrieveStocks(decision["arguments"]["company_name"]))
-
-
-
-
