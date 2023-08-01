@@ -1,15 +1,22 @@
 // src/App.js
-import React from 'react';
+import {Route, Switch} from 'wouter';
 import Navbar from './components/Navbar';
-import Dashboard from './components/Dashboard';
+import Dashboard from './pages/Dashboard';
+import About from './pages/About';
+import './App.css';
 
 function App() {
   return (
     <div className="bg-white">
       <Navbar />
-      <Dashboard />
+         <Switch>
+          <Route path='/' component={Dashboard} />
+          <Route path='/about' component={About} />
+         </Switch>
     </div>
   );
 }
 
 export default App;
+
+
