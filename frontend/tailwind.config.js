@@ -1,6 +1,7 @@
 // tailwind.config.cjs
 
 /** @type {import('tailwindcss').Config} */
+// eslint-disable-next-line no-undef
 module.exports = {
   content: [ // tell Tailwind which files to track
     "./index.html",
