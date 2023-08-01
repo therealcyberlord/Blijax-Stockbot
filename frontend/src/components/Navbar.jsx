@@ -8,6 +8,11 @@ function Navbar() {
                  Dashboard
             </Link>
             <div className="px-6">
+                <Link href="/Stockbot" className="text-white text-2xl font-bold">
+                 Stockbot
+                </Link>
+            </div>
+            <div>
                 <Link href="/about" className="text-white text-2xl font-bold">
                  About
                 </Link>
