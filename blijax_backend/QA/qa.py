@@ -21,6 +21,7 @@ os.environ['OPENAI_API_KEY'] = key
 
 #query set to terminal answer
 # to run type this in terminal:  python3 Blijax-Stockbot/blijax_backend/QA/qa.py "Sum up the information into a couple sentences getting the key points"  
+# at the end of the command there is a section of text with apostrophes. That section is the prompt. Feel free to mess around with the prompt. 
 query = sys.argv[1]
 
 
