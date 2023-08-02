@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 
 let tvScriptLoadingPromise;
 
-export default function TradingViewWidget() {
+export default function StockViewWidget() {
   const onLoadScriptRef = useRef();
 
   useEffect(() => {
