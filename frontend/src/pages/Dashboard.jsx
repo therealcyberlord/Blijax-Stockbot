@@ -1,5 +1,6 @@
 import StockViewWidget from '../components/Stockview';
-import ForexViewWidget from '../components/ForexView'
+import ForexViewWidget from '../components/Forexview';
+import IndicesAndBondsViewWidget from '../components/Indicesandbondsview';
 const Dashboard = () => {
   return (
     <div className="container mx-auto mt-8">
@@ -14,7 +15,7 @@ const Dashboard = () => {
         </div>
         <div className="bg-gray-400 p-6 rounded-lg transform transition-all hover:scale-105">
           <h3 className="text-xl font-bold mb-2">Indices and Bonds</h3>
-          
+          <IndicesAndBondsViewWidget />
          </div>
         <div className="bg-gray-400 p-6 rounded-lg transform transition-all hover:scale-105">
           <h3 className="text-xl font-bold mb-2">Live News Feed</h3>
