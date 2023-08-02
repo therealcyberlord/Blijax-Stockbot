@@ -191,3 +191,5 @@ elif decision["name"] == "retrieveStocks":
     f = open('Blijax-Stockbot/blijax_backend/generate/language.txt', 'r+')
     f.truncate(0)
 
+    
+
