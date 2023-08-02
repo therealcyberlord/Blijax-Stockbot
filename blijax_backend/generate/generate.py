@@ -42,6 +42,12 @@ import requests
 from langchain import SerpAPIWrapper
 from langchain.agents import initialize_agent, Tool, create_pandas_dataframe_agent
 from langchain.agents import AgentType
+from langchain.document_loaders import TextLoader
+from langchain.document_loaders import DirectoryLoader
+from langchain.indexes import VectorstoreIndexCreator
+from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
+
 
 import yfinance as yf
 import json
@@ -49,7 +55,7 @@ import json
 # --- Environment variables --- #
 load_dotenv()
 
-key = os.getenv("API_KEY")
+key = os.getenv("OPENAI_API_KEY")
 serpkey = os.getenv("SERPAPI_API_KEY")
 
 json_schema = {
@@ -143,6 +149,47 @@ decision = chain.run(input)
 print(decision)
 
 if (decision["name"] == "retrieveNews"):
-    print(retrieveNews(input))
+
+    #Sets output as variable
+    newsReply = retrieveNews(input)
+
+    #sets variable to txt file
+    with open('Blijax-Stockbot/blijax_backend/generate/language.txt', 'w') as f:
+     f.write(repr(newsReply) + '\n')    
+    
+    #sets txt file to loader variable
+    loader = TextLoader('Blijax-Stockbot/blijax_backend/generate/language.txt')
+
+    #loads the variable with the txt file stored
+    index = VectorstoreIndexCreator().from_loaders([loader])
+
+    #Creating smooth language from prompt
+    print(index.query("Tell me about this starting with the company name and ticker. Then tell me about " + input))
+
+    #resets txt file to blank file
+    f = open('Blijax-Stockbot/blijax_backend/generate/language.txt', 'r+')
+    f.truncate(0)
+
 elif decision["name"] == "retrieveStocks":
-    print(retrieveStocks(decision["arguments"]["company_name"]))
+    #Sets output as variable
+    tickerReply = retrieveStocks(decision["arguments"]["company_name"])
+
+    #sets variable to txt file
+    with open('Blijax-Stockbot/blijax_backend/generate/language.txt', 'w') as f:
+     f.write(repr(tickerReply) + '\n')     
+
+    #sets txt file to loader variable
+    loader = TextLoader('Blijax-Stockbot/blijax_backend/generate/language.txt')
+
+    #loads the variable with the txt file stored
+    index = VectorstoreIndexCreator().from_loaders([loader])
+
+    #Creating smooth language from prompt
+    print(index.query("Tell me the name, stock price, and the recommendation"))
+
+    #resets txt file to blank file
+    f = open('Blijax-Stockbot/blijax_backend/generate/language.txt', 'r+')
+    f.truncate(0)
+
+    
+
