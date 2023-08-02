@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from .models import Text
 
-from summarizer.summarizer import summarize 
+from generate.generate import generate
 
 # says that this function can do handle POST requests
 @api_view(["POST"])
@@ -23,7 +23,7 @@ def summarize_view(request):
 		new_addition.save()
 
 		# pull the text and summarize it
-		summary = summarize(new_addition.text)
+		summary = generate(new_addition.text)
 		
 		# return answer & status 200 (meaning everything worked!) 
 		return Response(summary, status=200)
