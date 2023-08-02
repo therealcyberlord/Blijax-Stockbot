@@ -1,6 +1,8 @@
 import os
 import sys
-
+import codecs
+from newspaper import Article
+import nltk
 #import dotenv
 from dotenv import load_dotenv
 
@@ -11,6 +13,7 @@ from langchain.indexes import VectorstoreIndexCreator
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import UnstructuredURLLoader
+from langchain.document_loaders import SeleniumURLLoader
 
 #loading dotenv
 load_dotenv()
@@ -23,16 +26,33 @@ os.environ['OPENAI_API_KEY'] = key
 #query set to terminal answer
 # to run type this in terminal:  python3 Blijax-Stockbot/blijax_backend/QA/qa.py "Sum up the information into a couple sentences getting the key points"  
 # at the end of the command there is a section of text with apostrophes. That section is the prompt. Feel free to mess around with the prompt. 
-query = sys.argv[1]
+#query = sys.argv[1]
 
-#loading the TXT data into 
-loader = TextLoader('Blijax-Stockbot/blijax_backend/QA/qaTEXT.txt')
+
+#loading the TXT data into loader
+
+#for single txt files
+#loader = TextLoader('Blijax-Stockbot/blijax_backend/QA/qaTEXT.txt')
+
+#For multiple url's
+#loader = read("https://www.fitchratings.com/research/sovereigns/fitch-downgrades-united-states-long-term-ratings-to-aa-from-aaa-outlook-stable-01-08-2023")
+
+url = 'https://www.fitchratings.com/research/sovereigns/fitch-downgrades-united-states-long-term-ratings-to-aa-from-aaa-outlook-stable-01-08-2023'
+article = Article(url)
+
+articleINFO = article.text
+
+#loader = TextLoader(article.text)
+
+with open('Blijax-Stockbot/blijax_backend/generate/language.txt', 'w') as f:
+  f.write(repr(articleINFO) + '\n')     
+
 
 #Storing the vector index with the data through the loader
-index = VectorstoreIndexCreator().from_loaders([loader])
+#index = VectorstoreIndexCreator().from_loaders([loader])
 
 #printing the answer
-print(index.query(query))
+#print(index.query("Paraphrase this into a couple key points in a couple sentences"))
 
 
 
