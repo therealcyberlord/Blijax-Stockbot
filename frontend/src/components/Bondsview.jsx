@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 
 let tvScriptLoadingPromise;
 
-export default function AssetsViewWidget() {
+export default function BondsViewWidget() {
   const onLoadScriptRef = useRef();
 
   useEffect(
@@ -28,10 +28,11 @@ export default function AssetsViewWidget() {
       return () => onLoadScriptRef.current = null;
 
       function createWidget() {
-        if (document.getElementById('tradingview_90ccf') && 'TradingView' in window) {
+        if (document.getElementById('tradingview_b458b') && 'TradingView' in window) {
           new window.TradingView.widget({
-            autosize: true,
-            symbol: "NASDAQ:AAPL",
+            height: 300,
+            width: "100%",
+            symbol: "FWB:HNK3",
             interval: "D",
             timezone: "Etc/UTC",
             theme: "light",
@@ -40,7 +41,7 @@ export default function AssetsViewWidget() {
             toolbar_bg: "#f1f3f6",
             enable_publishing: false,
             allow_symbol_change: true,
-            container_id: "tradingview_90ccf"
+            container_id: "tradingview_b458b"
           });
         }
       }
@@ -50,7 +51,7 @@ export default function AssetsViewWidget() {
 
   return (
     <div className='tradingview-widget-container'>
-      <div id='tradingview_90ccf' />
+      <div id='tradingview_b458b' />
       <div className="tradingview-widget-copyright">
         <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span className="blue-text">Track all markets on TradingView</span></a>
       </div>
