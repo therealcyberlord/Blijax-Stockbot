@@ -34,7 +34,8 @@ export default function IndicesViewWidget() {
         "TradingView" in window
       ) {
         new window.TradingView.widget({
-          autosize: true,
+          height: 300,
+          width: "100%",
           symbol: "CAPITALCOM:US100",
           interval: "D",
           timezone: "Etc/UTC",

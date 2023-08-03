@@ -34,7 +34,8 @@ export default function ForexViewWidget() {
         "TradingView" in window
       ) {
         new window.TradingView.widget({
-          autosize: true,
+          height: 300,
+          width: "100%",
           symbol: "FX:EURUSD",
           interval: "D",
           timezone: "Etc/UTC",
