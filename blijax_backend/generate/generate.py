@@ -39,6 +39,7 @@ from langchain.document_loaders import DirectoryLoader
 from langchain.indexes import VectorstoreIndexCreator
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
+from langchain.document_loaders import UnstructuredURLLoader
 
 import requests
 
@@ -205,18 +206,7 @@ def generate(text):
         
         return newsReply
 
-        
-
     elif decision["name"] == "retrieveStocks":
         #Sets output as variable
         tickerReply = retrieveStocks(decision["arguments"]["company_name"])
         return llm.predict(f"Can you summarize this?: {tickerReply}")
-        
-        
-
-        
-        
-        
-
-    
-
