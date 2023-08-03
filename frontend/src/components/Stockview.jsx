@@ -32,7 +32,7 @@ export default function StockViewWidget() {
         "TradingView" in window
       ) {
         new window.TradingView.widget({
-          height: 300,
+          height: 250,
           width: "100%",
           symbol: "NASDAQ:AAPL",
           interval: "D",
