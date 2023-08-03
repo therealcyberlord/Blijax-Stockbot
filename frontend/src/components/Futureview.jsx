@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react";
 
 let tvScriptLoadingPromise;
 
-export default function ForexViewWidget() {
+export default function FutureViewWidget() {
   const onLoadScriptRef = useRef();
 
   useEffect(() => {
@@ -30,13 +30,13 @@ export default function ForexViewWidget() {
 
     function createWidget() {
       if (
-        document.getElementById("tradingview_1b1de") &&
+        document.getElementById("tradingview_9dadf") &&
         "TradingView" in window
       ) {
         new window.TradingView.widget({
           height: 250,
           width: "100%",
-          symbol: "FX:EURUSD",
+          symbol: "CME_MINI:ES1!",
           interval: "D",
           timezone: "Etc/UTC",
           theme: "light",
@@ -45,7 +45,7 @@ export default function ForexViewWidget() {
           toolbar_bg: "#f1f3f6",
           enable_publishing: false,
           allow_symbol_change: true,
-          container_id: "tradingview_1b1de",
+          container_id: "tradingview_9dadf",
         });
       }
     }
@@ -53,7 +53,7 @@ export default function ForexViewWidget() {
 
   return (
     <div className="tradingview-widget-container">
-      <div id="tradingview_1b1de" />
+      <div id="tradingview_9dadf" />
       <div className="tradingview-widget-copyright">
         <a
           href="https://www.tradingview.com/"

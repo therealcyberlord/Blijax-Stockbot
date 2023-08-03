@@ -1,8 +1,10 @@
+// TradingViewWidget.jsx
+
 import React, { useEffect, useRef } from "react";
 
 let tvScriptLoadingPromise;
 
-export default function IndicesAndBondsViewWidget() {
+export default function CryptoViewWidget() {
   const onLoadScriptRef = useRef();
 
   useEffect(() => {
@@ -28,12 +30,13 @@ export default function IndicesAndBondsViewWidget() {
 
     function createWidget() {
       if (
-        document.getElementById("tradingview_defcf") &&
+        document.getElementById("tradingview_10c69") &&
         "TradingView" in window
       ) {
         new window.TradingView.widget({
-          autosize: true,
-          symbol: "NASDAQ:AAPL",
+          height: 250,
+          width: "100%",
+          symbol: "BITSTAMP:BTCUSD",
           interval: "D",
           timezone: "Etc/UTC",
           theme: "light",
@@ -42,7 +45,7 @@ export default function IndicesAndBondsViewWidget() {
           toolbar_bg: "#f1f3f6",
           enable_publishing: false,
           allow_symbol_change: true,
-          container_id: "tradingview_defcf",
+          container_id: "tradingview_10c69",
         });
       }
     }
@@ -50,7 +53,7 @@ export default function IndicesAndBondsViewWidget() {
 
   return (
     <div className="tradingview-widget-container">
-      <div id="tradingview_defcf" />
+      <div id="tradingview_10c69" />
       <div className="tradingview-widget-copyright">
         <a
           href="https://www.tradingview.com/"
