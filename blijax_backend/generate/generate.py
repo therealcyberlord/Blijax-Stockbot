@@ -223,12 +223,21 @@ def generate(text):
 
     if (decision["name"] == "retrieveNews"):
         ticker = retrieveTicker(input)
-        #Sets output as variable
+        
         newsReply = retrieveNews(ticker["ticker"])
         
         return newsReply
 
     elif decision["name"] == "retrieveStocks":
-        #Sets output as variable
+        
         tickerReply = retrieveStocks(decision["arguments"]["company_name"])
         return llm.predict(f"Can you summarize this?: {tickerReply}")
+    
+    elif decision["name"] == "questionsAboutCurrent":
+        
+        return questionsAboutCurrent(input)
+    
+    elif decision["name"] == "generalConversation":
+        
+        return generalConversation(input)
+    
