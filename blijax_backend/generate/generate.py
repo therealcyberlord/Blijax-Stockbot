@@ -261,3 +261,4 @@ def generate(text):
         
         return generalConversation(input)
     
+print(generate("What's the latest news on msft?"))
