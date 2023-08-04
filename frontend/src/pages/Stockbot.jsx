@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 
 // eslint-disable-next-line no-unused-vars
-const getSummary = (prompt) => {
+const getBot = (prompt) => {
   const url = 'http://localhost:8000' + '/generate/';
   const options = {
       method: 'POST',
@@ -23,7 +23,10 @@ const Stockbot = () => {
 
   const handleInputChange = (event) => {
     if (event.keyCode === 13) { // Check if Enter key is pressed
-      setInputValue(event.target.value);
+      getBot(event.target.value)
+       .then((result) =>{setInputValue(result);})
+       .catch((error) =>{setInputValue(error.message);
+      });
       event.target.value = ''; // Clear the text box after Enter is pressed
     }
   };
