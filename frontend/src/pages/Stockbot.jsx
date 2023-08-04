@@ -1,6 +1,23 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 
+// eslint-disable-next-line no-unused-vars
+const getSummary = (prompt) => {
+  const url = 'http://localhost:8000' + '/generate/';
+  const options = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json' // this part is important!
+      },
+      body: JSON.stringify( // must JSON encode request body
+          {
+              text: prompt
+          }
+      )
+  };
+  return fetch(url, options).then(res => res.json()); // returns a Promise
+}
+
 const Stockbot = () => {
   const [inputValue, setInputValue] = useState('');
 
