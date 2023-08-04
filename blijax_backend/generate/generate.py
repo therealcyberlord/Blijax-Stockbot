@@ -97,7 +97,7 @@ tools = [
     ),
 ]
 
-mrkl = initialize_agent(
+agent = initialize_agent(
     tools, llm, agent=AgentType.OPENAI_MULTI_FUNCTIONS, verbose=True
 )
 
@@ -186,10 +186,22 @@ def extract_text_from(url):
     lines = (line.strip() for line in text.splitlines())
     return '\n'.join(line for line in lines if line)
 
+def questionsAboutCurrent(input):
+    """
+    Questions which are unrelated to finance.
+    """
+    return agent.run(input)
+
+def generalConversation(input):
+    """
+    General conversation
+    """
+    return llm.predict(input)
+
 # --- Decision prompt; helps LLM decide which function to call --- #
 msgs = [
     SystemMessage(
-        content="You are a helpful assistant who retrieves the latest information about a large company."
+        content="You are a helpful assistant who retrieves the latest information."
     ),
     HumanMessage(
         content="Make calls to the relevant function to record information in the following input:"
@@ -204,7 +216,7 @@ def generate(text):
 
     input = text
 
-    chain = create_openai_fn_chain([retrieveNews, retrieveStocks], llm, prompt, verbose=True)
+    chain = create_openai_fn_chain([retrieveNews, retrieveStocks, questionsAboutCurrent, generalConversation], llm, prompt, verbose=True)
     decision = chain.run(input)
     print(decision)
 
