@@ -48,7 +48,7 @@ import json
 
 from bs4 import BeautifulSoup
 
-from QA.qa import urlSummarizer
+#from QA.qa import urlSummarizer
 
 # --- Environment variables --- #
 load_dotenv()
@@ -156,13 +156,14 @@ def retrieveNews(input):
     chain = create_structured_output_chain(json_news_schema, llm, prompt, verbose=True)
     jsonResponse = chain.run(json.dumps(result))
     
+    return jsonResponse
+    """
     textToSummarize = extract_text_from(jsonResponse["url"])
     returned = urlSummarizer(textToSummarize)
 
     return returned
+    """
     
-    
-
 # --- Retrieves Stock Prices --- #
 def retrieveStocks(company_name: str):
     prompt = ChatPromptTemplate(messages=messages)
@@ -260,5 +261,3 @@ def generate(text):
     elif decision["name"] == "generalConversation":
         
         return generalConversation(input)
-    
-print(generate("What's the latest news on msft?"))
