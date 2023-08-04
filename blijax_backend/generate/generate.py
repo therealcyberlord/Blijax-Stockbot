@@ -46,6 +46,8 @@ import requests
 import yfinance as yf
 import json
 
+from bs4 import BeautifulSoup
+
 # --- Environment variables --- #
 load_dotenv()
 
@@ -175,6 +177,14 @@ def retrieveTicker(input):
 
     chain = create_structured_output_chain(json_schema, llm, prompt, verbose=True)
     return chain.run(input)
+
+def extract_text_from(url):
+    html = requests.get(url).text
+    soup = BeautifulSoup(html, features="html.parser")
+    text = soup.get_text()
+
+    lines = (line.strip() for line in text.splitlines())
+    return '\n'.join(line for line in lines if line)
 
 # --- Decision prompt; helps LLM decide which function to call --- #
 msgs = [
