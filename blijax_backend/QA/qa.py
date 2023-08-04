@@ -21,7 +21,7 @@ load_dotenv()
 key = os.getenv("OPENAI_API_KEY")
 
 #openai API key from .env
-os.environ['OPENAI_API_KEY'] = key
+
 
 #query set to terminal answer
 # to run type this in terminal:  python3 Blijax-Stockbot/blijax_backend/QA/qa.py "Sum up the information into a couple sentences getting the key points"  

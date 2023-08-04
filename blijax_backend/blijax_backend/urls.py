@@ -20,6 +20,6 @@ from django.urls import path
 from blijax_app.views import *
 
 urlpatterns = [
-    path("summary/", summarize_view),
+    path("generate/", summarize_view),
     path("admin/", admin.site.urls),
 ]
