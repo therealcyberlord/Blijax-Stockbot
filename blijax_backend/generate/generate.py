@@ -48,6 +48,8 @@ import json
 
 from bs4 import BeautifulSoup
 
+from QA.qa import urlSummarizer
+
 # --- Environment variables --- #
 load_dotenv()
 
@@ -127,6 +129,16 @@ messages = [
     )
 ]
 
+# --- Extracts text from a url, useful for summarize news --- #
+def extract_text_from(url):
+    html = requests.get(url).text
+    soup = BeautifulSoup(html, features="html.parser")
+    text = soup.get_text()
+
+    lines = (line.strip() for line in text.splitlines())
+    return '\n'.join(line for line in lines if line)
+
+
 # --- Retrieves news --- #
 def retrieveNews(input):
     prompt = ChatPromptTemplate(messages=prompt_msgs)
@@ -142,7 +154,14 @@ def retrieveNews(input):
     result = response.text
 
     chain = create_structured_output_chain(json_news_schema, llm, prompt, verbose=True)
-    return chain.run(json.dumps(result))
+    jsonResponse = chain.run(json.dumps(result))
+    
+    textToSummarize = extract_text_from(jsonResponse["url"])
+    returned = urlSummarizer(textToSummarize)
+
+    return returned
+    
+    
 
 # --- Retrieves Stock Prices --- #
 def retrieveStocks(company_name: str):
@@ -201,7 +220,7 @@ def generalConversation(input):
 # --- Decision prompt; helps LLM decide which function to call --- #
 msgs = [
     SystemMessage(
-        content="You are a helpful assistant who retrieves the latest information."
+        content="You are a helpful assistant who retrieves the latest information about large companies."
     ),
     HumanMessage(
         content="Make calls to the relevant function to record information in the following input:"
@@ -225,6 +244,7 @@ def generate(text):
         ticker = retrieveTicker(input)
         
         newsReply = retrieveNews(ticker["ticker"])
+        print(newsReply)
         
         return newsReply
 
