@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import (
-    AIMessage,
     HumanMessage,
     SystemMessage
 )
@@ -19,11 +18,8 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
 from langchain.schema import HumanMessage, SystemMessage
 
-from langchain import PromptTemplate
 from langchain.prompts.chat import (
     ChatPromptTemplate,
-    SystemMessagePromptTemplate,
-    AIMessagePromptTemplate,
     HumanMessagePromptTemplate,
 )
 
@@ -32,14 +28,11 @@ from langchain.utilities import SerpAPIWrapper
 from langchain.agents import load_tools
 
 from langchain import SerpAPIWrapper
-from langchain.agents import initialize_agent, Tool, create_pandas_dataframe_agent
+from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
-from langchain.document_loaders import TextLoader
-from langchain.document_loaders import DirectoryLoader
-from langchain.indexes import VectorstoreIndexCreator
-from langchain.llms import OpenAI
+
 from langchain.chat_models import ChatOpenAI
-from langchain.document_loaders import UnstructuredURLLoader
+
 
 import requests
 
@@ -56,6 +49,11 @@ load_dotenv()
 key = os.getenv("OPENAI_API_KEY")
 serpkey = os.getenv("SERPAPI_API_KEY")
 apilayerkey = os.getenv("API_LAYER_API_KEY")
+
+class blijax():
+    def __init__(self):
+        pass
+
 
 # --- Output format for stock outputs --- #
 json_schema = {
@@ -156,13 +154,13 @@ def retrieveNews(input):
     chain = create_structured_output_chain(json_news_schema, llm, prompt, verbose=True)
     jsonResponse = chain.run(json.dumps(result))
     
-    return jsonResponse
-    """
-    textToSummarize = extract_text_from(jsonResponse["url"])
-    returned = urlSummarizer(textToSummarize)
+    #return jsonResponse
+    
+    urls = [str(jsonResponse["url"])]
+    returned = urlSummarizer(urls)
 
     return returned
-    """
+    
     
 # --- Retrieves Stock Prices --- #
 def retrieveStocks(company_name: str):
@@ -248,7 +246,7 @@ def generate(text):
         print(newsReply)
         
         return newsReply
-
+    
     elif decision["name"] == "retrieveStocks":
         
         tickerReply = retrieveStocks(decision["arguments"]["company_name"])
@@ -261,5 +259,5 @@ def generate(text):
     elif decision["name"] == "generalConversation":
         
         return generalConversation(input)
-
-print(urlSummarizer("https://en.wikipedia.org/wiki/Quantum_mechanics"))
+    
+#print(generate("Should I buy msft stock?"))
