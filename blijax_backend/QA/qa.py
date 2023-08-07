@@ -26,7 +26,23 @@ def urlSummarizer(url):
   It exposes the vectorstore in a retriever interface, so the vectorstore can be used to retrieve relevant documents for a query.
   It wraps all this functionality in a simple API - VectorstoreIndexCreator.from_loaders() - which takes in document loaders and handles splitting, embedding and indexing the documents automatically.
   """
-  return index.query("Paraphrase this into a couple key points in a minimum of five sentence")
+
+  data = loader.load()
+  letters = len(data[0].page_content)
+
+  if (letters < 5000):
+    sentences = "3"
+  elif (7500 > letters > 5000):
+    sentences = "5"
+  elif (10000 > letters > 7500):
+    sentences = "7"
+  else:
+    sentences = "10"
+
+
+  return index.query("Paraphrase this into a couple key points in a minimum of " + sentences + " sentence")
 
 urlSummarizer("Hello")
+
+
 
