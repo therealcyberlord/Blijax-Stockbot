@@ -262,6 +262,4 @@ def generate(text):
         
         return generalConversation(input)
 
-text = extract_text_from("https://en.wikipedia.org/wiki/Quantum_mechanics")
-
-print(urlSummarizer(text))
+print(urlSummarizer("https://en.wikipedia.org/wiki/Quantum_mechanics"))

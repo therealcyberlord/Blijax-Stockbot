@@ -25,8 +25,6 @@ from langchain.schema import (
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
 
-
-
 #import dotenv
 from dotenv import load_dotenv
 
@@ -47,37 +45,18 @@ def extract_text_from(url):
      return '\n'.join(line for line in lines if line)
 
 #Sets text to all info
-#text = extract_text_from("https://en.wikipedia.org/wiki/Quantum_mechanics")
+text = extract_text_from("https://en.wikipedia.org/wiki/Quantum_mechanics")
 
 #def urlSummarizer(text): 
  # initializing size of string
 
 def urlSummarizer(text):
+  urls = ["https://en.wikipedia.org/wiki/Quantum_mechanics"]
 
-  N = 10
-  
-  # using random.choices()
-  # generating random strings
-  res = ''.join(random.choices(string.ascii_uppercase +
-                                string.digits, k=N))
+  loader = SeleniumURLLoader(urls=urls)
 
-  f = open(res + ".txt", "x")
-
-  with open(res + '.txt', 'w') as f:
-    f.write(repr(text) + '\n')     
-
-
-
-  #Sets file to loader
-  loader = TextLoader(res + ".txt")
-
-  #Storing the vector index with the data through the loader
   index = VectorstoreIndexCreator().from_loaders([loader])
 
   #printing the answer
-  print(index.query("Paraphrase this into a couple key points in a minium of five sentence"))
+  return index.query("Paraphrase this into a couple key points in a minium of five sentence")
 
-  #removes the file
-  os.remove(res + ".txt")
-
-  
