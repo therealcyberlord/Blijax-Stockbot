@@ -48,7 +48,7 @@ import json
 
 from bs4 import BeautifulSoup
 
-#from QA.qa import urlSummarizer
+from QA.qa import urlSummarizer
 
 # --- Environment variables --- #
 load_dotenv()
@@ -205,7 +205,7 @@ def extract_text_from(url):
 
     lines = (line.strip() for line in text.splitlines())
     return '\n'.join(line for line in lines if line)
-
+ 
 def questionsAboutCurrent(input):
     """
     Questions which are unrelated to finance.
@@ -261,3 +261,7 @@ def generate(text):
     elif decision["name"] == "generalConversation":
         
         return generalConversation(input)
+
+text = extract_text_from("https://en.wikipedia.org/wiki/Quantum_mechanics")
+
+print(urlSummarizer(text))
