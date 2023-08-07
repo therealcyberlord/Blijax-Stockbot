@@ -2,7 +2,7 @@
 import {Route, Switch} from 'wouter';
 import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
-import About from './pages/About';
+import Team from './pages/Team';
 import Stockbot from './pages/Stockbot';
 import './App.css';
 
@@ -12,7 +12,7 @@ function App() {
       <Navbar />
          <Switch>
           <Route path='/' component={Dashboard} />
-          <Route path='/about' component={About} />
+          <Route path='/Team' component={Team} />
           <Route path='/stockbot' component={Stockbot} />
          </Switch>
     </div>
