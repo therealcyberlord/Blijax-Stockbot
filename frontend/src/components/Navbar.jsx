@@ -13,7 +13,7 @@ function Navbar() {
                 </Link>
             </div>
             <div>
-                <Link href="/Team" className="text-white text-2xl font-bold">
+                <Link href="/team" className="text-white text-2xl font-bold">
                  Team
                 </Link>
             </div>
