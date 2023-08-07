@@ -13,6 +13,11 @@ function Navbar() {
                 </Link>
             </div>
             <div>
+                <Link href="/team" className="text-white text-2xl font-bold">
+                 Team
+                </Link>
+            </div>
+            <div className="px-6">
                 <Link href="/about" className="text-white text-2xl font-bold">
                  About
                 </Link>
