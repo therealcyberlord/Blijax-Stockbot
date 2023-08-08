@@ -1,7 +1,6 @@
 // TradingViewWidget.jsx
 
-// eslint-disable-next-line no-unused-vars
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 let tvScriptLoadingPromise;
 
