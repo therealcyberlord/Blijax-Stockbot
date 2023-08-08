@@ -1,33 +1,36 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import { useState } from "react";
 
-// eslint-disable-next-line no-unused-vars
 const getBot = (prompt) => {
-  const url = 'http://localhost:8000' + '/generate/';
+  const url = "http://localhost:8000" + "/generate/";
   const options = {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json' // this part is important!
-      },
-      body: JSON.stringify( // must JSON encode request body
-          {
-              text: prompt
-          }
-      )
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json", // this part is important!
+    },
+    body: JSON.stringify(
+      // must JSON encode request body
+      {
+        text: prompt,
+      }
+    ),
   };
-  return fetch(url, options).then(res => res.json()); // returns a Promise
-}
+  return fetch(url, options).then((res) => res.json()); // returns a Promise
+};
 
 const Stockbot = () => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (event) => {
-    if (event.keyCode === 13) { // Check if Enter key is pressed
+    if (event.keyCode === 13) {
+      // Check if Enter key is pressed
       getBot(event.target.value)
-       .then((result) =>{setInputValue(result);})
-       .catch((error) =>{setInputValue(error.message);
-      });
-      event.target.value = ''; // Clear the text box after Enter is pressed
+        .then((result) => {
+          setInputValue(result);
+        })
+        .catch((error) => {
+          setInputValue(error.message);
+        });
+      event.target.value = ""; // Clear the text box after Enter is pressed
     }
   };
 
@@ -51,4 +54,3 @@ const Stockbot = () => {
 };
 
 export default Stockbot;
-
