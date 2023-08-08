@@ -1,9 +1,11 @@
+import React from "react";
+
 const About = () => {
   return (
     <div className="bg-white-400 min-h-screen flex justify-center items-center">
-      <div className="w-5/6 h-2/3 p-8 bg-gray-600 rounded-lg shadow-md flex">
-        <img src="src/assets/stockbot.jpg" alt="Product" width="30%" height="30%" rounded-lg/>
-        <div className="flex flex-col justify-center ml-8">
+      <div className="w-5/6 h-2/3 p-8 bg-gray-600 rounded-lg shadow-md flex flex-col md:flex-row items-center">
+        <img src="src/assets/stockbot.jpg" alt="Product" className="w-1/4 md:w-1/6 h-auto rounded-lg mb-4 md:mb-0" />
+        <div className="md:ml-8">
           <h2 className="text-4xl font-semibold mb-4 text-gray-100">
             About Us
           </h2>
@@ -14,15 +16,7 @@ const About = () => {
             Based on the data our product will help customers understand the
             stock market better, allowing better financial decisions. In
             addition, our product provides advice on purchasing stocks using a
-            virtual assistant that customers can chat with. Question Submission:
-            Our interactive website provides a way to submit a question about
-            the stock market into our model. Language Integration Model: After
-            being able to submit a question the integrated language model in our
-            site should be able to understand the language and provide a
-            response in an adequate way. Response Generation: The site should be
-            able to generate a response answering their question about the stock
-            market in an accurate way. This response will be written in a clear
-            and concise way.
+            virtual assistant that customers can chat with. 
           </p>
         </div>
       </div>
