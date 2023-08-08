@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
 const About = () => {
   return (
     <div className="bg-white-400 min-h-screen flex justify-center items-center">
       <div className="w-5/6 h-2/3 p-8 bg-gray-600 rounded-lg shadow-md flex">
-        <img src="src/assets/stockbot.jpg" alt="Product" width="500" height="100" />
+        <img src="src/assets/stockbot.jpg" alt="Product" width="500" height="100" rounded-lg/>
         <div className="flex flex-col justify-center ml-8">
           <h2 className="text-4xl font-semibold mb-4 text-gray-100">About Us</h2>
           <p className="text-3xl mb-4 text-gray-100">
