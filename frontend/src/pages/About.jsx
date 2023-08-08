@@ -1,61 +1,22 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
+import React from 'react';
 
 const About = () => {
   return (
-    <div className="container mx-auto mt-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div className="bg-gray-400 p-6 rounded-lg shadow-lg shadow-emerald-500 transform transition-all hover:scale-105">
-          <img
-            src="https://t3.ftcdn.net/jpg/01/97/11/64/360_F_197116416_hpfTtXSoJMvMqU99n6hGP4xX0ejYa4M7.jpg"
-            alt="Image 6"
-            className="w-full mb-4"
-          />
-          <h3 className="text-xl font-bold mb-2">
-            Xingyu Bian - Product Manager
-          </h3>
-        </div>
-        <div className="bg-gray-400 p-6 rounded-lg shadow-lg shadow-emerald-500 transform transition-all hover:scale-105">
-          <img
-            src="https://t3.ftcdn.net/jpg/01/97/11/64/360_F_197116416_hpfTtXSoJMvMqU99n6hGP4xX0ejYa4M7.jpg"
-            alt="Image 1"
-            className="w-full mb-4"
-          />
-          <h3 className="text-xl font-bold mb-2">Aaron Nguy - Backend</h3>
-        </div>
-        <div className="bg-gray-400 p-6 rounded-lg shadow-lg shadow-emerald-500 transform transition-all hover:scale-105">
-          <img
-            src="https://t3.ftcdn.net/jpg/01/97/11/64/360_F_197116416_hpfTtXSoJMvMqU99n6hGP4xX0ejYa4M7.jpg"
-            alt="Image 2"
-            className="w-full mb-4"
-          />
-          <h3 className="text-xl font-bold mb-2">Blake Almon - Backend</h3>
-        </div>
-        <div className="bg-gray-400 p-6 rounded-lg shadow-lg shadow-emerald-500 transform transition-all hover:scale-105">
-          <img
-            src="https://t3.ftcdn.net/jpg/01/97/11/64/360_F_197116416_hpfTtXSoJMvMqU99n6hGP4xX0ejYa4M7.jpg"
-            alt="Image 3"
-            className="w-full mb-4"
-          />
-          <h3 className="text-xl font-bold mb-2">Isaac Jung - Backend</h3>
-        </div>
-        <div className="bg-gray-400 p-6 rounded-lg shadow-lg shadow-emerald-500 transform transition-all hover:scale-105">
-          <img
-            src="https://t3.ftcdn.net/jpg/01/97/11/64/360_F_197116416_hpfTtXSoJMvMqU99n6hGP4xX0ejYa4M7.jpg"
-            alt="Image 4"
-            className="w-full mb-4"
-          />
-          <h3 className="text-xl font-bold mb-2">Jackson Pirooz - Frontend</h3>
-        </div>
-        <div className="bg-gray-400 p-6 rounded-lg shadow-lg shadow-emerald-500 transform transition-all hover:scale-105">
-          <img
-            src="https://t3.ftcdn.net/jpg/01/97/11/64/360_F_197116416_hpfTtXSoJMvMqU99n6hGP4xX0ejYa4M7.jpg"
-            alt="Image 5"
-            className="w-full mb-4"
-          />
-          <h3 className="text-xl font-bold mb-2">Lee Sophia - Frontend</h3>
-        </div>
+    <div className="bg-white-400 min-h-screen flex justify-center items-center">
+      <div className="w-5/6 h-2/3 p-8 bg-gray-600 rounded-lg shadow-md">
+        <h2 className="text-4xl font-semibold mb-4 text-gray-100">About Us</h2>
+        <p className="text-3xl mb-4 text-gray-100">
+        Our product will predict the trend of the stock market based on the news of the day (WSJ, economic news, press releases, laws passed, summarized SEC Filings, CPI reports, FOMC rates, and Company News). 
+        Based on the data our product will help customers understand the stock market better, allowing better financial decisions. 
+        In addition, our product provides advice on purchasing stocks using a virtual assistant that customers can chat with.
+        Question Submission: Our interactive website provides a way to submit a question about the stock market into our model.
+        Language Integration Model: After being able to submit a question the integrated language model in our site should be able to understand the language and provide a response in an adequate way.
+        Response Generation: The site should be able to generate a response answering their question about the stock market in an accurate way. This response will be written in a clear and concise way.
+        </p>
+        <img src="../assets/stockbot.jpg" alt="Product" width="500" height="600"></img>
+        
       </div>
+      
     </div>
   );
 };
