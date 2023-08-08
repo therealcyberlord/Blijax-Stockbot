@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
 import Team from './pages/Team';
 import Stockbot from './pages/Stockbot';
-import About from './pages/About'
+import About from './pages/About';
 import './App.css';
 
 function App() {
