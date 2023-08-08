@@ -31,7 +31,7 @@ const Team = () => {
         <Box
           imageUrl="https://t3.ftcdn.net/jpg/01/97/11/64/360_F_197116416_hpfTtXSoJMvMqU99n6hGP4xX0ejYa4M7.jpg"
           altText="Image 6"
-          text="Lee Sophia - Frontend"
+          text="Sophia Lee - Frontend"
         />
       </div>
     </div>
