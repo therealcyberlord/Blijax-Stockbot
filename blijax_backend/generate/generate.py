@@ -47,17 +47,14 @@ load_dotenv()
 key = os.getenv("OPENAI_API_KEY")
 serpkey = os.getenv("SERPAPI_API_KEY")
 apilayerkey = os.getenv("API_LAYER_API_KEY")
-"""
-def retrieveNews(company_name: str):
-    print("news")
-def retrieveStocks(company_name: str):
-    print("stocks")
-def questionsAboutCurrent(input: str):
-    print("questions")
-def generalConversation(input: str):
-    print("conversation")
-"""
+
+def retrieveNews(company_name: str) -> str: pass
+def retrieveStocks(company_name: str) -> str: pass
+def questionsAboutCurrent(input: str) -> str: pass
+def generalConversation(input: str) -> str: pass
+
 class Blijax:
+
     def __init__(self, ai_model: str, summarize_length: str):
         self.ai_model = ai_model
         self.summarize_length = summarize_length
@@ -107,7 +104,7 @@ class Blijax:
                 content="Extract the name of the company, news title, and the source url from the following input:"
             ),
             HumanMessagePromptTemplate.from_template("{input}"),
-            HumanMessage(content="Tips: Make sure to answer in the correct format"),
+            HumanMessage(content="Tips: Make sure to answer in the correct format and choose the most relevant source based on the title."),
         ]
 
         # --- Prompt for extraction yahoo finance information --- #
@@ -128,8 +125,12 @@ class Blijax:
         news_prompt = ChatPromptTemplate(messages=self.news_messages)
 
         self.stock_chain = create_structured_output_chain(self.json_schema, self.llm, stock_prompt, verbose=True)
-        self.news_chain = create_structured_output_chain(self.json_schema, self.llm, news_prompt, verbose=True)
+        self.news_chain = create_structured_output_chain(self.json_news_schema, self.llm, news_prompt, verbose=True)
         #self.decision_chain = None
+        
+    # --- Define a list of tools offered by the agent --- #
+    def setUpChain(self, functions_list):
+        
         msgs = [
             SystemMessage(
                 content="You are a helpful assistant who retrieves the latest information about large companies."
@@ -141,22 +142,8 @@ class Blijax:
             HumanMessage(content="Tips: Make sure to answer in the correct format.")
         ]
         prompt = ChatPromptTemplate(messages=msgs)
-        self.decision_chain = create_openai_fn_chain([self.retrieveNews, self.retrieveStocks, self.questionsAboutCurrent, self.generalConversation], self.llm, prompt, verbose=True)
-
-    # --- Output format for stock outputs --- #
-    
-
-    # --- Setting up language model --- #
-    
-
-    # --- Loads serpapi tool, sets the language model to use, and sets the api key --- #
-    
-    
-
-    # --- Define a list of tools offered by the agent --- #
-    
-
-    
+       
+        self.decision_chain = create_openai_fn_chain(functions_list, self.llm, prompt, verbose=True)    
 
     # --- Prompt for extracting news sources --- #
 
@@ -177,8 +164,8 @@ class Blijax:
         
         #return jsonResponse
         
-        urls = [str(jsonResponse["url"])]
-        returned = urlSummarizer(urls, self.summarize_length)
+        urls = str(jsonResponse["url"])
+        returned = urlSummarizer(urls)
 
         return returned
         
@@ -270,7 +257,4 @@ class Blijax:
         elif decision["name"] == "generalConversation":
             
             return self.generalConversation(input)
-        
-blijax_model = Blijax("gpt-4", "in 5 sentences")
-#print(blijax_model.generate("What's the stock price of aapl?"))
-#print(blijax_model.retrieveNews.__doc__)
+
