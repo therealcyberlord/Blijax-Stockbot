@@ -30,7 +30,7 @@ const Dashboard = () => {
           <BondsViewWidget />
         </div>
         <div className="bg-gray-400 p-10 rounded-lg transform transition-all hover:scale-105">
-          <h3 className="text-3xl font-bold mb-2">Future</h3>
+          <h3 className="text-3xl font-bold mb-2">Futures</h3>
           <FutureViewWidget />
         </div>
       </div>
