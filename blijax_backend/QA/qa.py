@@ -12,7 +12,7 @@ key = os.getenv("OPENAI_API_KEY")
 
 # --- Loads url data, splits it into chunks --- #
 def urlSummarizer(input_urls):
-  urls = input_urls
+  urls = [input_urls]
 
   loader = SeleniumURLLoader(urls=urls)
 
