@@ -1,3 +1,4 @@
 .env
-.history 
+**/__pycache__/
+.history
 python_env
