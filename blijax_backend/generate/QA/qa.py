@@ -11,8 +11,8 @@ load_dotenv()
 key = os.getenv("OPENAI_API_KEY")
 
 # --- Loads url data, splits it into chunks --- #
-def urlSummarizer(input_urls):
-  urls = [input_urls]
+def urlSummarizer(url: str, summarize_length: str):
+  urls = [url]
 
   loader = SeleniumURLLoader(urls=urls)
 
@@ -26,22 +26,5 @@ def urlSummarizer(input_urls):
   It exposes the vectorstore in a retriever interface, so the vectorstore can be used to retrieve relevant documents for a query.
   It wraps all this functionality in a simple API - VectorstoreIndexCreator.from_loaders() - which takes in document loaders and handles splitting, embedding and indexing the documents automatically.
   """
-
-  data = loader.load()
-  letters = len(data[0].page_content)
-
-  if (letters < 5000):
-    sentences = "3"
-  elif (7500 > letters > 5000):
-    sentences = "5"
-  elif (10000 > letters > 7500):
-    sentences = "7"
-  else:
-    sentences = "10"
-
-
-  return index.query("Paraphrase this into a couple key points in a minimum of " + sentences + " sentence")
-
-
-
+  return index.query(f"Paraphrase this into a couple key points in {summarize_length}")
 
