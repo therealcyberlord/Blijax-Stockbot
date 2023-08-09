@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const getBot = (prompt) => {
   const url = "http://localhost:8000" + "/generate/";
@@ -15,34 +15,26 @@ const getBot = (prompt) => {
 };
 
 const Stockbot = () => {
-  const [messages, setMessages] = useState([]);
+  const [messageHistory, setMessageHistory] = useState([]); // New state for message history
   const inputRef = useRef(null);
 
-  const handleInputChange = (event) => {
+  const handleInputChange = async (event) => {
     if (event.keyCode === 13) {
       const newMessage = event.target.value;
-      const newMessages = [...messages, { text: newMessage, isUser: true }];
-      setMessages(newMessages);
-
-      getBot(newMessage)
-        .then((result) => {
-          const botResponse = result;
-          const newMessagesWithResponse = [
-            ...newMessages,
-            { text: botResponse, isUser: false },
-          ];
-          setMessages(newMessagesWithResponse);
-        })
-        .catch((error) => {
-          const errorMessage = error.message;
-          const newMessagesWithError = [
-            ...newMessages,
-            { text: errorMessage, isUser: false },
-          ];
-          setMessages(newMessagesWithError);
-        });
+      const userMessage = { text: newMessage, isUser: true };
+      setMessageHistory((prevHistory) => [...prevHistory, userMessage]);
 
       event.target.value = "";
+
+      try {
+        const botResponse = await getBot(newMessage);
+        const botMessage = { text: botResponse, isUser: false };
+        setMessageHistory((prevHistory) => [...prevHistory, botMessage]);
+      } catch (error) {
+        const errorMessage = error.message;
+        const errorBotMessage = { text: errorMessage, isUser: false };
+        setMessageHistory((prevHistory) => [...prevHistory, errorBotMessage]);
+      }
     }
   };
 
@@ -54,7 +46,7 @@ const Stockbot = () => {
     <div className="flex flex-col items-center justify-center h-screen">
       <div className="absolute top-24 bg-blue-300 p-6 rounded-lg w-5/6 h-2/3">
         <div className="bg-blue-300 p-6 rounded-lg w-full h-full overflow-y-scroll">
-          {messages.map((message, index) => (
+          {messageHistory.map((message, index) => (
             <div
               key={index}
               className={`mb-2 ${message.isUser ? "text-right" : "text-left"}`}
