@@ -142,7 +142,7 @@ class Blijax:
             HumanMessage(content="Tips: Make sure to answer in the correct format.")
         ]
         prompt = ChatPromptTemplate(messages=msgs)
-       
+        
         self.decision_chain = create_openai_fn_chain(functions_list, self.llm, prompt, verbose=True)    
 
     # --- Prompt for extracting news sources --- #
@@ -209,7 +209,6 @@ class Blijax:
         
         return self.llm.predict(input)
     
-
     # --- Decision prompt; helps LLM decide which function to call --- #
     msgs = [
         SystemMessage(
@@ -257,4 +256,8 @@ class Blijax:
         elif decision["name"] == "generalConversation":
             
             return self.generalConversation(input)
+        
+blijax_model = Blijax("gpt-4", "5 sentences")
+blijax_model.setUpChain()
+print(blijax_model.generate("What's the stock price of ____"))
 
