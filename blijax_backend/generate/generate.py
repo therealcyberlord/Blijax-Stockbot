@@ -47,6 +47,7 @@ load_dotenv()
 key = os.getenv("OPENAI_API_KEY")
 serpkey = os.getenv("SERPAPI_API_KEY")
 apilayerkey = os.getenv("API_LAYER_API_KEY")
+newsapikey = os.getenv("NEWSAPI_API_KEY")
 
 def retrieveNews(company_name: str) -> str: pass
 def retrieveStocks(company_name: str) -> str: pass
@@ -129,11 +130,11 @@ class Blijax:
             )
         ]
 
-        stock_prompt = ChatPromptTemplate(messages=self.stock_messages)
-        news_prompt = ChatPromptTemplate(messages=self.news_messages)
+        self.stock_prompt = ChatPromptTemplate(messages=self.stock_messages)
+        self.news_prompt = ChatPromptTemplate(messages=self.news_messages)
 
-        self.stock_chain = create_structured_output_chain(self.json_schema, self.llm, stock_prompt, verbose=True)
-        self.news_chain = create_structured_output_chain(self.json_news_schema, self.llm, news_prompt, verbose=True)
+        self.stock_chain = create_structured_output_chain(self.json_schema, self.llm, self.stock_prompt, verbose=True)
+        self.news_chain = create_structured_output_chain(self.json_news_schema, self.llm, self.news_prompt, verbose=True)
         #self.decision_chain = None
         
     # --- Define a list of tools offered by the agent --- #
@@ -156,29 +157,49 @@ class Blijax:
     # --- Prompt for extracting news sources --- #
 
     # --- Retrieves news --- #
-    def retrieveNews(self, company_ticker: str) -> str:
-        url = f"https://api.apilayer.com/financelayer/news?tickers={company_ticker}"
+    def retrieveNews(self, company_name: str) -> str:
+        import requests
 
-        payload = {}
-        headers= {
-            "apikey": apilayerkey
-        }
+        url = ('https://newsapi.org/v2/everything?'
+            f'q={company_name}&'
+            'from=2023-08-08&'
+            'sortBy=popularity&'
+            f'apiKey={newsapikey}')
 
-        response = requests.request("GET", url, headers=headers, data = payload)
+
+        response = requests.request("GET", url)
 
         result = response.text
-
-        jsonResponse = self.news_chain.run(json.dumps(result))
+        result = json.loads(result)
+        #jsonResponse = self.news_chain.run(json.dumps(result))
         
-        #return jsonResponse
-        
-        urls = str(jsonResponse["url"])
+        articles = result["articles"][0:4]        
+        urls = [i["url"] for i in articles]
         returned = urlSummarizer(urls)
-
+        
         return returned
         
     # --- Retrieves Stock Prices --- #
+    """
     def retrieveStocks(self, company_name: str) -> str:
+        comp = yf.Ticker(company_name)
+        return self.stock_chain.run(json.dumps(comp.info))
+    """
+    def retrieveStocks(self, company_name: str, questionAboutStock: str) -> str:
+        self.stock_messages = [
+            SystemMessage(
+                content="You are a world class algorithm for extraction information from JSON format."
+            ),
+            HumanMessage(
+                content=f"Given this input, answer this question: {questionAboutStock}"
+            ),
+            HumanMessagePromptTemplate.from_template("{input}"),
+            HumanMessage(
+                content="Tips: Make sure to answer in the correct format."
+            )
+        ]
+        self.stock_prompt = ChatPromptTemplate(messages=self.stock_messages)
+        self.stock_chain.prompt = self.stock_prompt
         comp = yf.Ticker(company_name)
         return self.stock_chain.run(json.dumps(comp.info))
 
@@ -208,9 +229,8 @@ class Blijax:
         chain = create_structured_output_chain(json_schema, self.llm, prompt, verbose=True)
         return chain.run(input)
 
-    
     def questionsAboutCurrent(self, input) -> str:
-       
+
         return self.agent.run(input)
 
     def generalConversation(self, input) -> str:
@@ -245,17 +265,17 @@ class Blijax:
         print(decision)
         
         if (decision["name"] == "retrieveNews"):
-            ticker = self.retrieveTicker(input)
+            #ticker = self.retrieveTicker(input)
             
-            newsReply = self.retrieveNews(ticker["ticker"])
+            newsReply = self.retrieveNews(decision["arguments"]["company_name"])
             print(newsReply)
             
             return newsReply
         
         elif decision["name"] == "retrieveStocks":
             
-            tickerReply = self.retrieveStocks(decision["arguments"]["company_name"])
-            return self.llm.predict(f"Can you summarize this?: {tickerReply}")
+            tickerReply = self.retrieveStocks(decision["arguments"]["company_name"], input)
+            return self.llm.predict(f"Can you summarize this?: {tickerReply}") 
         
         elif decision["name"] == "questionsAboutCurrent":
             
