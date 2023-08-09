@@ -1,7 +1,6 @@
 // TradingViewWidget.jsx
 
-// eslint-disable-next-line no-unused-vars
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 let tvScriptLoadingPromise;
 
@@ -35,7 +34,7 @@ export default function BondsViewWidget() {
         "TradingView" in window
       ) {
         new window.TradingView.widget({
-          height: 250,
+          height: 275,
           width: "100%",
           symbol: "FWB:HNK3",
           interval: "D",
