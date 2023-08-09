@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const getBot = (prompt) => {
   const url = "http://localhost:8000" + "/generate/";
