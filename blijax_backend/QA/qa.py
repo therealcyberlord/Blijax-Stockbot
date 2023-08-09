@@ -11,8 +11,8 @@ load_dotenv()
 key = os.getenv("OPENAI_API_KEY")
 
 # --- Loads url data, splits it into chunks --- #
-def urlSummarizer(url):
-  urls = ['https://www.barrons.com/articles/apple-stock-earnings-stock-price-iphone-a310d308']
+def urlSummarizer(input_urls):
+  urls = input_urls
 
   loader = SeleniumURLLoader(urls=urls)
 
