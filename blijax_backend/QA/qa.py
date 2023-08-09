@@ -42,7 +42,6 @@ def urlSummarizer(url):
 
   return index.query("Paraphrase this into a couple key points in a minimum of " + sentences + " sentence")
 
-urlSummarizer("Hello")
 
 
 

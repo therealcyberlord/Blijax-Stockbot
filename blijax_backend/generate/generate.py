@@ -264,10 +264,3 @@ class Blijax:
         elif decision["name"] == "generalConversation":
             
             return self.generalConversation(input)
-
-
-functionList = [retrieveNews, retrieveStocks, questionsAboutCurrent, generalConversation]
-
-blijax_model = Blijax("gpt-4", "in 5 sentences")
-blijax_model.setUpChain(functionList)
-summary = blijax_model.generate("What's the stock price on msft?")
