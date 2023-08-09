@@ -35,4 +35,3 @@ Blijax is a multipurpose AI-powered web application whose purpose is targeted at
     - Frontend:
         - Navigate to the frontend directory
         - Run ```npm run dev```
-![Demo GIF](https://tenor.com/bHgVZ.gif)
