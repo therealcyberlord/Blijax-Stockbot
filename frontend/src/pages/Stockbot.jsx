@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const getBot = (prompt) => {
   const url = "http://localhost:8000" + "/generate/";
@@ -55,6 +55,7 @@ const Stockbot = () => {
                 className={`${
                   message.isUser ? "bg-blue-500 text-white" : "bg-white"
                 } inline-block px-4 py-2 rounded-lg`}
+                style={{ font: "Arial, sans-serif", fontSize: "16px" }} // You can adjust font and fontSize here
               >
                 {message.text}
               </div>
