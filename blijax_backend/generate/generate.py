@@ -105,6 +105,12 @@ class Blijax:
             }
         }
 
+        self.json_conversation_schema = {
+            "properties": {
+                "text": {"title": "text", "description": "the text response", "type": "string"},
+            }
+        }
+
         self.news_messages = [
             SystemMessage(
                 content="You are a world class algorithm for extracting new information about large companies."
@@ -130,11 +136,19 @@ class Blijax:
             )
         ]
 
+        self.personal_context = [
+            SystemMessage(content="You are Blijax, an assistant who helps answer questions. If you don't know something, say you don't know."),
+            HumanMessage(content="Repond accordingly to this input:"),
+            HumanMessagePromptTemplate.from_template("{input}"),
+            HumanMessage(content="Tips: Make sure to answer in the correct format.")
+        ]
+
         self.stock_prompt = ChatPromptTemplate(messages=self.stock_messages)
         self.news_prompt = ChatPromptTemplate(messages=self.news_messages)
 
         self.stock_chain = create_structured_output_chain(self.json_schema, self.llm, self.stock_prompt, verbose=True)
         self.news_chain = create_structured_output_chain(self.json_news_schema, self.llm, self.news_prompt, verbose=True)
+        
         #self.decision_chain = None
         
     # --- Define a list of tools offered by the agent --- #
@@ -175,16 +189,15 @@ class Blijax:
         
         articles = result["articles"][0:4]        
         urls = [i["url"] for i in articles]
-        returned = urlSummarizer(urls)
-        
+        print(urls)
+        returned = []
+        for i in urls:
+            returned.append(urlSummarizer(i))
+            print("url_summarized")
+        print(returned)
         return returned
         
     # --- Retrieves Stock Prices --- #
-    """
-    def retrieveStocks(self, company_name: str) -> str:
-        comp = yf.Ticker(company_name)
-        return self.stock_chain.run(json.dumps(comp.info))
-    """
     def retrieveStocks(self, company_name: str, questionAboutStock: str) -> str:
         self.stock_messages = [
             SystemMessage(
@@ -200,8 +213,10 @@ class Blijax:
         ]
         self.stock_prompt = ChatPromptTemplate(messages=self.stock_messages)
         self.stock_chain.prompt = self.stock_prompt
+    
         comp = yf.Ticker(company_name)
         return self.stock_chain.run(json.dumps(comp.info))
+    
 
     # --- Identifies ticker in text --- #
     def retrieveTicker(self, input):
@@ -230,12 +245,14 @@ class Blijax:
         return chain.run(input)
 
     def questionsAboutCurrent(self, input) -> str:
-
+        """
+        Good for checking questions about current events, weather updates, or things similar.
+        """
         return self.agent.run(input)
 
     def generalConversation(self, input) -> str:
         
-        return self.llm.predict(input)
+        return self.llm.predict(f"You are Blijax, an assistant who helps answer questions. Respond accordingly to this input: {input}")
     
     # --- Decision prompt; helps LLM decide which function to call --- #
     msgs = [
@@ -246,7 +263,7 @@ class Blijax:
             content="Make calls to the relevant function to record information in the following input:"
         ),
         HumanMessagePromptTemplate.from_template("{input}"),
-        HumanMessage(content="Tips: Make sure to answer in the correct format.")
+        HumanMessage(content="Tips: Make sure to answer in the correct format, and calling the questionsAboutCurrent function will give you the power to search the internet.")
     ]
 
     # --- Generates Response --- #
@@ -268,13 +285,14 @@ class Blijax:
             #ticker = self.retrieveTicker(input)
             
             newsReply = self.retrieveNews(decision["arguments"]["company_name"])
-            print(newsReply)
+            newsReply = "".join(newsReply)
             
             return newsReply
         
         elif decision["name"] == "retrieveStocks":
-            
-            tickerReply = self.retrieveStocks(decision["arguments"]["company_name"], input)
+            ticker = self.retrieveTicker(input)
+            print(ticker["ticker"])
+            tickerReply = self.retrieveStocks(ticker["ticker"], input)
             return self.llm.predict(f"Can you summarize this?: {tickerReply}") 
         
         elif decision["name"] == "questionsAboutCurrent":
