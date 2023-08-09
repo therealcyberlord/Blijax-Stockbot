@@ -53,6 +53,14 @@ def retrieveStocks(company_name: str) -> str: pass
 def questionsAboutCurrent(input: str) -> str: pass
 def generalConversation(input: str) -> str: pass
 
+"""
+TO-DO:
+1. Broaden search query
+2. Allow external URL summarization
+3. Fix all bugs with search
+4. Fix object oriented approach
+"""
+
 class Blijax:
 
     def __init__(self, ai_model: str, summarize_length: str):
@@ -256,8 +264,10 @@ class Blijax:
         elif decision["name"] == "generalConversation":
             
             return self.generalConversation(input)
-        
-blijax_model = Blijax("gpt-4", "5 sentences")
-blijax_model.setUpChain()
-print(blijax_model.generate("What's the stock price of ____"))
 
+
+functionList = [retrieveNews, retrieveStocks, questionsAboutCurrent, generalConversation]
+
+blijax_model = Blijax("gpt-4", "in 5 sentences")
+blijax_model.setUpChain(functionList)
+summary = blijax_model.generate("What's the stock price on msft?")
