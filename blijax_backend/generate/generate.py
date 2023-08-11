@@ -2,10 +2,18 @@
 import os
 from dotenv import load_dotenv
 
+from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import (
+    HumanMessage,
+    SystemMessage
+)
+
 from langchain.chains.openai_functions import (
     create_openai_fn_chain,
     create_structured_output_chain,
 )
+
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
 from langchain.schema import HumanMessage, SystemMessage
@@ -16,9 +24,18 @@ from langchain.prompts.chat import (
 )
 
 from langchain.utilities import SerpAPIWrapper
+
+from langchain.agents import load_tools
+
 from langchain import SerpAPIWrapper
-from langchain.agents import initialize_agent, Tool, load_tools, AgentType
+from langchain.agents import initialize_agent, Tool
+from langchain.agents import AgentType
+
 from langchain.chat_models import ChatOpenAI
+
+
+import requests
+
 import yfinance as yf
 import json
 
@@ -32,22 +49,10 @@ serpkey = os.getenv("SERPAPI_API_KEY")
 apilayerkey = os.getenv("API_LAYER_API_KEY")
 newsapikey = os.getenv("NEWSAPI_API_KEY")
 
-
-def retrieveNews(company_name: str) -> str:
-    pass
-
-
-def retrieveStocks(company_name: str) -> str:
-    pass
-
-
-def questionsAboutCurrent(input: str) -> str:
-    pass
-
-
-def generalConversation(input: str) -> str:
-    pass
-
+def retrieveNews(company_name: str) -> str: pass
+def retrieveStocks(company_name: str) -> str: pass
+def questionsAboutCurrent(input: str) -> str: pass
+def generalConversation(input: str) -> str: pass
 
 """
 TO-DO:
@@ -57,8 +62,8 @@ TO-DO:
 4. Fix object oriented approach
 """
 
-
 class Blijax:
+
     def __init__(self, ai_model: str, summarize_length: str):
         self.ai_model = ai_model
         self.summarize_length = summarize_length
@@ -81,54 +86,28 @@ class Blijax:
             "description": "Information about the company",
             "type": "object",
             "properties": {
-                "name": {
-                    "title": "Name",
-                    "description": "The company's name",
-                    "type": "string",
-                },
-                "news": {
-                    "title": "News",
-                    "description": "The recent news about the company",
-                    "type": "string",
-                },
-                "stockPrice": {
-                    "title": "Price",
-                    "description": "The company's stock price",
-                },
-                "recommend": {
-                    "title": "Recommend",
-                    "description": "If it is recommended to buy this stock",
-                },
-            },
+                "name": {"title": "Name", "description": "The company's name", "type": "string"},
+                "news": {"title": "News", "description": "The recent news about the company", "type": "string"},
+                "stockPrice": {"title": "Price", "description": "The company's stock price"},
+                "recommend": {"title": "Recommend", "description": "If it is recommended to buy this stock"}
+            }
         }
 
-        # --- Output format for news outputs --- #
+            # --- Output format for news outputs --- #
         self.json_news_schema = {
             "title": "Company",
             "description": "Information about the company",
             "type": "object",
             "properties": {
-                "name": {
-                    "title": "Name",
-                    "description": "The company's name",
-                    "type": "string",
-                },
-                "news": {
-                    "title": "News",
-                    "description": "The recent news about the company",
-                    "type": "string",
-                },
+                "name": {"title": "Name", "description": "The company's name", "type": "string"},
+                "news": {"title": "News", "description": "The recent news about the company", "type": "string"},
                 "url": {"title": "Url", "description": "The url from the source"},
-            },
+            }
         }
 
         self.json_conversation_schema = {
             "properties": {
-                "text": {
-                    "title": "text",
-                    "description": "the text response",
-                    "type": "string",
-                },
+                "text": {"title": "text", "description": "the text response", "type": "string"},
             }
         }
 
@@ -140,9 +119,7 @@ class Blijax:
                 content="Extract the name of the company, news title, and the source url from the following input:"
             ),
             HumanMessagePromptTemplate.from_template("{input}"),
-            HumanMessage(
-                content="Tips: Make sure to answer in the correct format and choose the most relevant source based on the title."
-            ),
+            HumanMessage(content="Tips: Make sure to answer in the correct format and choose the most relevant source based on the title."),
         ]
 
         # --- Prompt for extraction yahoo finance information --- #
@@ -154,32 +131,29 @@ class Blijax:
                 content="Extract the company name, stock prices, and if it is recommended to buy from the following input:"
             ),
             HumanMessagePromptTemplate.from_template("{input}"),
-            HumanMessage(content="Tips: Make sure to answer in the correct format."),
+            HumanMessage(
+                content="Tips: Make sure to answer in the correct format."
+            )
         ]
 
         self.personal_context = [
-            SystemMessage(
-                content="You are Blijax, an assistant who helps answer questions. If you don't know something, say you don't know."
-            ),
+            SystemMessage(content="You are Blijax, an assistant who helps answer questions. If you don't know something, say you don't know."),
             HumanMessage(content="Repond accordingly to this input:"),
             HumanMessagePromptTemplate.from_template("{input}"),
-            HumanMessage(content="Tips: Make sure to answer in the correct format."),
+            HumanMessage(content="Tips: Make sure to answer in the correct format.")
         ]
 
         self.stock_prompt = ChatPromptTemplate(messages=self.stock_messages)
         self.news_prompt = ChatPromptTemplate(messages=self.news_messages)
 
-        self.stock_chain = create_structured_output_chain(
-            self.json_schema, self.llm, self.stock_prompt, verbose=True
-        )
-        self.news_chain = create_structured_output_chain(
-            self.json_news_schema, self.llm, self.news_prompt, verbose=True
-        )
-
-        # self.decision_chain = None
-
+        self.stock_chain = create_structured_output_chain(self.json_schema, self.llm, self.stock_prompt, verbose=True)
+        self.news_chain = create_structured_output_chain(self.json_news_schema, self.llm, self.news_prompt, verbose=True)
+        
+        #self.decision_chain = None
+        
     # --- Define a list of tools offered by the agent --- #
     def setUpChain(self, functions_list):
+        
         msgs = [
             SystemMessage(
                 content="You are a helpful assistant who retrieves the latest information about large companies."
@@ -188,13 +162,11 @@ class Blijax:
                 content="Make calls to the relevant function to record information in the following input:"
             ),
             HumanMessagePromptTemplate.from_template("{input}"),
-            HumanMessage(content="Tips: Make sure to answer in the correct format."),
+            HumanMessage(content="Tips: Make sure to answer in the correct format.")
         ]
         prompt = ChatPromptTemplate(messages=msgs)
-
-        self.decision_chain = create_openai_fn_chain(
-            functions_list, self.llm, prompt, verbose=True
-        )
+        
+        self.decision_chain = create_openai_fn_chain(functions_list, self.llm, prompt, verbose=True)    
 
     # --- Prompt for extracting news sources --- #
 
@@ -202,21 +174,20 @@ class Blijax:
     def retrieveNews(self, company_name: str) -> str:
         import requests
 
-        url = (
-            "https://newsapi.org/v2/everything?"
-            f"q={company_name}&"
-            "from=2023-08-08&"
-            "sortBy=popularity&"
-            f"apiKey={newsapikey}"
-        )
+        url = ('https://newsapi.org/v2/everything?'
+            f'q={company_name}&'
+            'from=2023-08-08&'
+            'sortBy=popularity&'
+            f'apiKey={newsapikey}')
+
 
         response = requests.request("GET", url)
 
         result = response.text
         result = json.loads(result)
-        # jsonResponse = self.news_chain.run(json.dumps(result))
-
-        articles = result["articles"][0:3]
+        #jsonResponse = self.news_chain.run(json.dumps(result))
+        
+        articles = [result["articles"][0]]   
         urls = [i["url"] for i in articles]
         print(urls)
         returned = []
@@ -225,7 +196,7 @@ class Blijax:
             print("url_summarized")
         print(returned)
         return returned
-
+        
     # --- Retrieves Stock Prices --- #
     def retrieveStocks(self, company_name: str, questionAboutStock: str) -> str:
         self.stock_messages = [
@@ -236,13 +207,16 @@ class Blijax:
                 content=f"Given this input, answer this question: {questionAboutStock}"
             ),
             HumanMessagePromptTemplate.from_template("{input}"),
-            HumanMessage(content="Tips: Make sure to answer in the correct format."),
+            HumanMessage(
+                content="Tips: Make sure to answer in the correct format."
+            )
         ]
         self.stock_prompt = ChatPromptTemplate(messages=self.stock_messages)
         self.stock_chain.prompt = self.stock_prompt
-
+    
         comp = yf.Ticker(company_name)
         return self.stock_chain.run(json.dumps(comp.info))
+    
 
     # --- Identifies ticker in text --- #
     def retrieveTicker(self, input):
@@ -254,7 +228,7 @@ class Blijax:
                 content="Extract the company ticker from the following input:"
             ),
             HumanMessagePromptTemplate.from_template("{input}"),
-            HumanMessage(content="Tips: Make sure to answer in the correct format"),
+            HumanMessage(content="Tips: Make sure to answer in the correct format")
         ]
 
         prompt = ChatPromptTemplate(messages=msgs)
@@ -263,17 +237,11 @@ class Blijax:
             "description": "Company Ticker",
             "type": "object",
             "properties": {
-                "ticker": {
-                    "title": "ticker",
-                    "description": "The company's ticker",
-                    "type": "string",
-                },
-            },
+                "ticker": {"title": "ticker", "description": "The company's ticker", "type": "string"},
+            }
         }
 
-        chain = create_structured_output_chain(
-            json_schema, self.llm, prompt, verbose=True
-        )
+        chain = create_structured_output_chain(json_schema, self.llm, prompt, verbose=True)
         return chain.run(input)
 
     def questionsAboutCurrent(self, input) -> str:
@@ -283,11 +251,9 @@ class Blijax:
         return self.agent.run(input)
 
     def generalConversation(self, input) -> str:
-        return self.llm.predict(
-            f"""You are Blijax, an assistant who helps answer questions. Respond accordingly to this input: {input} 
-            Sometimes use emojis to express your emotions."""
-        )
-
+        
+        return self.llm.predict(f"You are Blijax, an assistant who helps answer questions. Respond accordingly to this input: {input}")
+    
     # --- Decision prompt; helps LLM decide which function to call --- #
     msgs = [
         SystemMessage(
@@ -297,41 +263,42 @@ class Blijax:
             content="Make calls to the relevant function to record information in the following input:"
         ),
         HumanMessagePromptTemplate.from_template("{input}"),
-        HumanMessage(
-            content="Tips: Make sure to answer in the correct format, and calling the questionsAboutCurrent function will give you the power to search the internet."
-        ),
+        HumanMessage(content="Tips: Make sure to answer in the correct format, and calling the questionsAboutCurrent function will give you the power to search the internet.")
     ]
 
     # --- Generates Response --- #
     def generate(self, text):
-        # prompt = ChatPromptTemplate(messages=self.msgs)
+        #prompt = ChatPromptTemplate(messages=self.msgs)
 
         input = text
-        # [self.retrieveNews, self.retrieveStocks, self.questionsAboutCurrent, self.generalConversation]
-        # [retrieveNews, retrieveStocks, questionsAboutCurrent, generalConversation]
+        #[self.retrieveNews, self.retrieveStocks, self.questionsAboutCurrent, self.generalConversation]
+        #[retrieveNews, retrieveStocks, questionsAboutCurrent, generalConversation]
+        
 
         if not self.decision_chain:
             pass
-
+            
         decision = self.decision_chain.run(input)
         print(decision)
-
-        if decision["name"] == "retrieveNews":
-            # ticker = self.retrieveTicker(input)
-
+        
+        if (decision["name"] == "retrieveNews"):
+            #ticker = self.retrieveTicker(input)
+            
             newsReply = self.retrieveNews(decision["arguments"]["company_name"])
             newsReply = "".join(newsReply)
-
+            
             return newsReply
-
+        
         elif decision["name"] == "retrieveStocks":
             ticker = self.retrieveTicker(input)
             print(ticker["ticker"])
             tickerReply = self.retrieveStocks(ticker["ticker"], input)
-            return self.llm.predict(f"Can you summarize this?: {tickerReply}")
-
+            return self.llm.predict(f"Can you summarize this?: {tickerReply}") 
+        
         elif decision["name"] == "questionsAboutCurrent":
+            
             return self.questionsAboutCurrent(input)
-
+        
         elif decision["name"] == "generalConversation":
+            
             return self.generalConversation(input)
