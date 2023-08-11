@@ -29,11 +29,15 @@ def summarize_view(request):
 		text = request.data.get("text", None)
 		
 		# add it to the database and save
+		
 		new_addition = Text(text=text)
 		new_addition.save()
 		
 		# pull the text and summarize it
-		summary = blijax_model.generate(new_addition.text)
-		
+		try: 
+			summary = blijax_model.generate(new_addition.text)
+		except Exception as e:
+			print(e)
+			return "Sorry, something went wrong. Please try again."
 		# return answer & status 200 (meaning everything worked!) 
 		return Response(summary, status=200)
