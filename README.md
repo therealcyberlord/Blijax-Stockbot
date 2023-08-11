@@ -36,4 +36,6 @@ Blijax is a multipurpose AI-powered web application whose purpose is targeted at
         - Navigate to the frontend directory
         - Run ```npm run dev```
 
-![alt text](https://github.com/therealcyberlord/Blijax-Stockbot/blob/main/frontend/src/assets/stockbot.jpg)
+<img src="https://github.com/therealcyberlord/Blijax-Stockbot/blob/main/frontend/src/assets/stockbot.jpg" alt="alt text" width="30%">
+
+
