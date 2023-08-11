@@ -216,7 +216,7 @@ class Blijax:
         result = json.loads(result)
         # jsonResponse = self.news_chain.run(json.dumps(result))
 
-        articles = result["articles"][0:3]
+        articles = [result["articles"][0]]
         urls = [i["url"] for i in articles]
         print(urls)
         returned = []
@@ -335,3 +335,5 @@ class Blijax:
 
         elif decision["name"] == "generalConversation":
             return self.generalConversation(input)
+
+
