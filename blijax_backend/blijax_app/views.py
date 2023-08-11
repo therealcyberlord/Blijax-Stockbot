@@ -38,6 +38,6 @@ def summarize_view(request):
 			summary = blijax_model.generate(new_addition.text)
 		except Exception as e:
 			print(e)
-			return "Sorry, something went wrong. Please try again."
+			summary = "Sorry, something went wrong. Please try again."
 		# return answer & status 200 (meaning everything worked!) 
 		return Response(summary, status=200)

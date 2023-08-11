@@ -335,3 +335,5 @@ class Blijax:
 
         elif decision["name"] == "generalConversation":
             return self.generalConversation(input)
+
+
