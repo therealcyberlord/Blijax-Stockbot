@@ -87,7 +87,6 @@ class Blijax:
             "type": "object",
             "properties": {
                 "name": {"title": "Name", "description": "The company's name", "type": "string"},
-                "news": {"title": "News", "description": "The recent news about the company", "type": "string"},
                 "stockPrice": {"title": "Price", "description": "The company's stock price"},
                 "recommend": {"title": "Recommend", "description": "If it is recommended to buy this stock"}
             }
@@ -176,7 +175,7 @@ class Blijax:
 
         url = ('https://newsapi.org/v2/everything?'
             f'q={company_name}&'
-            'from=2023-08-08&'
+            'from=2023-08-10&'
             'sortBy=popularity&'
             f'apiKey={newsapikey}')
 
@@ -185,9 +184,9 @@ class Blijax:
 
         result = response.text
         result = json.loads(result)
-        #jsonResponse = self.news_chain.run(json.dumps(result))
-        
-        articles = [result["articles"][0]]   
+        # jsonResponse = self.news_chain.run(json.dumps(result))
+
+        articles = [result["articles"][0]]
         urls = [i["url"] for i in articles]
         print(urls)
         returned = []
@@ -201,7 +200,7 @@ class Blijax:
     def retrieveStocks(self, company_name: str, questionAboutStock: str) -> str:
         self.stock_messages = [
             SystemMessage(
-                content="You are a world class algorithm for extraction information from JSON format."
+                content="You are a world class algorithm for extracting information from JSON format."
             ),
             HumanMessage(
                 content=f"Given this input, answer this question: {questionAboutStock}"
@@ -252,7 +251,7 @@ class Blijax:
 
     def generalConversation(self, input) -> str:
         
-        return self.llm.predict(f"You are Blijax, an assistant who helps answer questions. Respond accordingly to this input: {input}")
+        return self.llm.predict(f"You are Blijax, an assistant who helps answer stock market related questions. Respond accordingly to this input: {input}. Sometimes use emojis to express your emotions.")
     
     # --- Decision prompt; helps LLM decide which function to call --- #
     msgs = [
@@ -302,3 +301,5 @@ class Blijax:
         elif decision["name"] == "generalConversation":
             
             return self.generalConversation(input)
+
+
