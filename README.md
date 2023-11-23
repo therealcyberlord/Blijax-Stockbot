@@ -38,4 +38,6 @@ Blijax is a multipurpose AI-powered web application whose purpose is targeted at
 
 <img src="https://github.com/therealcyberlord/Blijax-Stockbot/blob/main/frontend/src/assets/stockbot.jpg" alt="alt text" width="30%">
 
+Check out the demo video [here](https://www.youtube.com/watch?v=3smPXLZiQdU)!
+
 
